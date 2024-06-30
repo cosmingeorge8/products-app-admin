@@ -13,10 +13,16 @@ function App() {
     useEffect(() => {
         fetchProducts();
 
-        socket.on('productChange', () => {
-            fetchProducts();
-        });
+        socket.on('productChange', handleProductChange);
+
+        return () => {
+            socket.off('productChange', handleProductChange);
+        }
     }, []);
+
+    function handleProductChange(){
+        fetchProducts();
+    }
 
     async function fetchProducts(){
         try {

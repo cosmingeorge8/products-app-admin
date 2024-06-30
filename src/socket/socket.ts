@@ -1,5 +1,4 @@
 import { io } from 'socket.io-client';
+import {BASE_URL} from "../api/util";
 
-const URL = 'http://localhost';
-
-export const socket = io(URL);
+export const socket = io(BASE_URL);

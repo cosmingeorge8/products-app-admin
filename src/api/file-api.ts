@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:5001/upload';
+import {BASE_URL} from "./util";
+
+const API_BASE_URL = `${BASE_URL}/upload`;
 
 export const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();

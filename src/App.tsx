@@ -29,6 +29,7 @@ function App() {
             const products = await getProducts();
             setProducts(products);
         } catch (error) {
+            setProducts([]);
             console.log('Failed to fetch products', error)
         }
     }

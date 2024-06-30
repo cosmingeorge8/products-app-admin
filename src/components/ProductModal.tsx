@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Modal, Form, FormGroup} from 'react-bootstrap';
+import {Button, Modal, Form, FormGroup, Spinner} from 'react-bootstrap';
 import {uploadFile} from '../api/file-api';
 import {createProduct, updateProduct} from '../api/product-api';
 import {ProductDTO} from "../types/product";
@@ -22,6 +22,7 @@ const ProductModal: React.FC<ProductModalProps> = ({show, handleClose, initialPr
     const [stock, setStock] = useState(initialProduct?.stock || 0);
     const [price, setPrice] = useState(initialProduct?.price || 0);
     const [imageUrl, setImageUrl] = useState(initialProduct?.image || '');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (initialProduct) {
@@ -33,13 +34,20 @@ const ProductModal: React.FC<ProductModalProps> = ({show, handleClose, initialPr
     }, [initialProduct]);
 
     async function handleFileUpload(event: any) {
+        setLoading(true);
         const file = event.target.files[0];
         try {
             const url = await uploadFile(file);
             setImageUrl(url); // Save the uploaded image URL
             alert(`File uploaded successfully`);
         } catch (error) {
-            console.error(error);
+            if (error instanceof Error){
+                alert(error.message);
+            }else{
+                alert('Failed to upload the file');
+            }
+        }finally {
+            setLoading(false);
         }
     }
 
@@ -80,7 +88,7 @@ const ProductModal: React.FC<ProductModalProps> = ({show, handleClose, initialPr
                 <Modal.Title>{initialProduct ? 'Update Product' : 'Add a new product'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form onSubmit={handleSubmit}>
+                {loading ? <Spinner></Spinner> :  <Form onSubmit={handleSubmit}>
                     <FormGroup>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -111,13 +119,16 @@ const ProductModal: React.FC<ProductModalProps> = ({show, handleClose, initialPr
                         <Form.Label>Image</Form.Label>
                         <Form.Control type="file" onChange={handleFileUpload}/>
                     </FormGroup>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
+
+                    <FormGroup className={'mt-2'}>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
+                    </FormGroup>
+                </Form>}
             </Modal.Body>
         </Modal>
     );

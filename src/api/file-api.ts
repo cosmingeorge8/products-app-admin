@@ -9,5 +9,9 @@ export const uploadFile = async (file: File): Promise<string> => {
         body: formData
     });
     const data = await response.json();
+
+    if (response.status === 400) {
+        throw new Error(data.message);
+    }
     return data.imageUrl;
 }

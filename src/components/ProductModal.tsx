@@ -120,7 +120,7 @@ const ProductModal: React.FC<ProductModalProps> = ({show, handleClose, initialPr
                         <Form.Control type="file" onChange={handleFileUpload}/>
                     </FormGroup>
 
-                    <FormGroup className={'mt-2'}>
+                    <FormGroup className={'mt-2 d-flex justify-content-end'}>
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>

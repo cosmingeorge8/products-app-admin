@@ -47,8 +47,8 @@ function App() {
                         <ProductComponent key={product._id} product={product}/>
                     ))}
                     </tbody>
-                    <AddProductButton/>
                 </Table>
+                <AddProductButton/>
             </Container>
         </div>
     );

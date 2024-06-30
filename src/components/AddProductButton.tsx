@@ -14,12 +14,12 @@ function AddProductButton() {
     };
 
     return (
-        <>
+        <div className={'d-flex justify-content-end'}>
             <Button variant="primary" onClick={handleShow}>
                 Add Product
             </Button>
             <ProductModal show={show} handleClose={handleClose} onSave={handleSave} />
-        </>
+        </div>
     );
 }
 

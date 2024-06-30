@@ -1,46 +1,69 @@
-# Getting Started with Create React App
+# Products App Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+The front-end of the `products-app` is a React-based admin interface for managing a list of products, each with a name, price, image, and stock. The admin front-end utilizes Bootstrap for styling and establishes a real-time socket.io connection to the backend to instantly reflect changes made from other clients.
 
-## Available Scripts
+## Prerequisites
+- Docker
+- Docker Compose
+- A running instance of the backend services (API, MongoDB, Redis, NGINX)
 
-In the project directory, you can run:
+## Project Structure
+- `web`: The React front-end application.
 
-### `npm start`
+## Environment Variables
+The front-end service can be configured using environment variables. By default, `BASE_URL` is set to `localhost` but can be overridden as needed.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Docker Configuration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Dockerfile
 
-### `npm test`
+Here's the Dockerfile for the React front-end:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```Dockerfile
+# Use the official Node.js image as the base image
+FROM node:16-alpine
 
-### `npm run build`
+# Set the working directory
+WORKDIR /app
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Copy the package.json and package-lock.json files to the working directory
+COPY package*.json ./
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Install dependencies
+RUN npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Copy the rest of the application code to the working directory
+COPY . .
 
-### `npm run eject`
+# Build the React application
+RUN npm run build
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Install serve to serve the build
+RUN npm install -g serve
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Set the environment variable to be used in the application
+ENV NODE_ENV=production
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Expose the port the app runs on
+EXPOSE 3000
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Command to run the application
+CMD ["serve", "-s", "build", "-l", "3000"]
+```
+## Running the Application
+1. Build and start all the services using Docker Compose:
+   ```bash
+   docker-compose up --build
+   ```
 
-## Learn More
+2. The front-end application should now be accessible at `http://localhost:3000`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Real-time Updates with Socket.io
+The front-end establishes a socket.io connection to the backend. When a product is updated on one computer, the changes are instantly reflected on other computers.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
+This project is licensed under the MIT License.
+
+---
+

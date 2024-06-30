@@ -30,7 +30,6 @@ export function ProductComponent(props: { product: Product }) {
 
     return (
         <tr>
-            <td>{props.product._id}</td>
             <td>{props.product.name}</td>
             <td>{props.product.stock}</td>
             <td>{props.product.price}</td>
